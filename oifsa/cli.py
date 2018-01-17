@@ -10,8 +10,8 @@ def droptable(conn,table):
 
 
 @click.command()
-@click.option('--dbname', default='fsa_ratings_all.db',  help='SQLite database name')
-@click.option('--ratingstable', default='ratingstable', help='FSA Ratings table name')
+@click.option('--dbname', default='fsa_ratings_all.db',  help='SQLite database name (default: fsa_ratings_all.db)')
+@click.option('--ratingstable', default='ratingstable', help='FSA Ratings table name (default: ratingstable)')
 @click.argument('command')
 def cli(dbname, ratingstable, command):
     conn = sqlite3.connect(dbname)

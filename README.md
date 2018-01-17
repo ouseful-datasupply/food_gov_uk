@@ -19,7 +19,7 @@ The created database can then be used with tools such as [`datasette`](https://g
 Usage: oi_fsa [OPTIONS] COMMAND
 
 Options:
-  --dbname TEXT        SQLite database name
-  --ratingstable TEXT  FSA Ratings table name
+  --dbname TEXT        SQLite database name (default: fsa_ratings_all.db)
+  --ratingstable TEXT  FSA Ratings table name (default: ratingstable)
   --help               Show this message and exit.
 ```
