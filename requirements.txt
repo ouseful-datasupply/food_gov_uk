@@ -1,0 +1,8 @@
+#Packages required in order to run the notebooks in this repo in Binderhub
+
+#Data collection extension
+git+https://github.com/ouseful-datasupply/food_gov_uk.git
+
+#Charting packages
+matplotlib
+
