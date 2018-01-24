@@ -1,7 +1,7 @@
 import requests
 import xmltodict
 import pandas as pd
-import tqdm
+from tqdm import tqdm
 
 from bs4 import BeautifulSoup
 
