@@ -18,6 +18,9 @@ The created database can then be used with tools such as [`datasette`](https://g
 ```
 Usage: oi_fsa [OPTIONS] COMMAND
 
+Commands:
+  collect              Collect data from FSA website
+
 Options:
   --dbname TEXT        SQLite database name (default: fsa_ratings_all.db)
   --ratingstable TEXT  FSA Ratings table name (default: ratingstable)
