@@ -65,7 +65,13 @@ def save_fsa_data(url, conn, table):
     ''' Download XML data file and add the data to the database '''
     
     r=requests.get(url)
-    dd=xmltodict.parse(r.text)
+    
+    #Getting errors in xmltodict parsing some XML files?
+    try:
+        dd=xmltodict.parse(r.text)
+    except:
+        print('Failed to parse file at {}'.format(url))
+        return
     dj=pd.DataFrame(dd['FHRSEstablishment']['EstablishmentCollection']['EstablishmentDetail'])
 
     dj['RatingDate']=pd.to_datetime(dj['RatingDate'], errors='coerce')
