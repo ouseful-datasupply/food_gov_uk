@@ -2,6 +2,7 @@ import requests
 import xmltodict
 import pandas as pd
 from tqdm import tqdm
+from time import sleep
 
 from bs4 import BeautifulSoup
 
@@ -61,8 +62,11 @@ def append(conn, df, table):
         checkcols(conn,df,table)
     df.to_sql(table, conn, index=False, if_exists='append')
 
-def save_fsa_data(url, conn, table):
+def save_fsa_data(url, conn, table, delay=1):
     ''' Download XML data file and add the data to the database '''
+    
+    #Play a bit nicer
+    sleep(delay)
     
     r=requests.get(url)
     
