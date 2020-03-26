@@ -27,4 +27,4 @@ def cli(dbname, ratingstable, command):
         tqdm.pandas(tqdm())
         #Drop table for now
         droptable(conn,ratingstable)
-        df['Download'].progress_apply(fsa.save_fsa_data,conn=conn, table=ratingstable)
+        df['Link'].progress_apply(fsa.save_fsa_data,conn=conn, table=ratingstable)

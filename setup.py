@@ -10,7 +10,9 @@ setup(
         'beautifulsoup4',
         'pandas',
         'xmltodict',
-        'tqdm'
+        'tqdm',
+        'lxml',
+        'html5lib'
     ],
     entry_points='''
         [console_scripts]

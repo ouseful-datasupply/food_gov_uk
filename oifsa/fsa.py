@@ -20,18 +20,18 @@ def _getDataList(html):
     #BeautifulSoup has a routine - find_all() - that will find all the HTML tags of a particular sort
     #Links are represented in HTML pages in the form <a href="http//example.com/page.html">link text</a>
     #Grab all the <a> (anchor) tags...
-    souptables=soup.find("div",{'id':'openDataStatic'}).findAll('tbody')
+    souptables=soup.find("table",{'class':'open-data-links'}).findAll('tbody')
     items=[]
-    th=soup.find("div",{'id':'openDataStatic'}).find('thead').findAll('th')
+    th=soup.find("table",{'class':'open-data-links'}).find('thead').findAll('th')
     header = [span(th[i]) for i in range(len(th))]
     for table in souptables:
         for tr in table.findAll('tr'):
             td = tr.find_all("td")
-            a=td[3].find('a')
-            if a.text=='English language':
+            a = td[0].find('a')
+            if '(English language)' in a.text:
                 items.append( (span(td[0]),span(td[1]), span(td[2]),a['href'] ) )
     df=pd.DataFrame(items)
-    df.columns=header
+    df.columns = header + ['Link']
     return df
 
 def getDataList():
@@ -76,9 +76,16 @@ def save_fsa_data(url, conn, table, delay=1):
     except:
         print('Failed to parse file at {}'.format(url))
         return
-    dj=pd.DataFrame(dd['FHRSEstablishment']['EstablishmentCollection']['EstablishmentDetail'])
-
-    dj['RatingDate']=pd.to_datetime(dj['RatingDate'], errors='coerce')
+    try:
+        dj=pd.DataFrame(dd['FHRSEstablishment']['EstablishmentCollection']['EstablishmentDetail'])
+    except:
+        print(url)
+        print(dj)
+    try:
+        dj['RatingDate'] = pd.to_datetime(dj['RatingDate'], errors='coerce')
+    except:
+        dj['RatingDate'] = pd.to_datetime(None, errors='coerce')
+    
     dj = pd.concat([dj.drop(['Scores'], axis=1), dj['Scores'].apply(pd.Series)], axis=1)
     dj = pd.concat([dj.drop(['Geocode'], axis=1), dj['Geocode'].apply(pd.Series)], axis=1)
     append(conn, dj, table)
