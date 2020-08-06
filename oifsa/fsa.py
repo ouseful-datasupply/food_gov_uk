@@ -15,22 +15,25 @@ def getDataHTML(url='http://ratings.food.gov.uk/open-data/en-GB'):
 def _getDataList(html):
     def span(cell):
         return cell.find('span').text
-    
+    df=pd.DataFrame()
     soup=BeautifulSoup(html.content, "html5lib")
     #BeautifulSoup has a routine - find_all() - that will find all the HTML tags of a particular sort
     #Links are represented in HTML pages in the form <a href="http//example.com/page.html">link text</a>
     #Grab all the <a> (anchor) tags...
-    souptables=soup.find("table",{'class':'open-data-links'}).findAll('tbody')
-    items=[]
-    th=soup.find("table",{'class':'open-data-links'}).find('thead').findAll('th')
-    header = [span(th[i]) for i in range(len(th))]
+    souptables=soup.findAll("table",{'class':'open-data-links'})
+    
     for table in souptables:
+        items=[]
+        th=table.find('thead').findAll('th')
+        header = [span(th[i]) for i in range(len(th))]
         for tr in table.findAll('tr'):
             td = tr.find_all("td")
+            if not len(td):
+                continue
             a = td[0].find('a')
             if '(English language)' in a.text:
                 items.append( (span(td[0]),span(td[1]), span(td[2]),a['href'] ) )
-    df=pd.DataFrame(items)
+        df=pd.concat([df, pd.DataFrame(items)])
     df.columns = header + ['Link']
     return df
 
