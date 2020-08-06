@@ -88,11 +88,13 @@ def save_fsa_data(url, conn, table, delay=1):
         dj['RatingDate'] = pd.to_datetime(dj['RatingDate'], errors='coerce')
     except:
         dj['RatingDate'] = pd.to_datetime(None, errors='coerce')
-    
-    dj = pd.concat([dj.drop(['Scores'], axis=1), dj['Scores'].apply(pd.Series)], axis=1)
-    dj = pd.concat([dj.drop(['Geocode'], axis=1), dj['Geocode'].apply(pd.Series)], axis=1)
-    append(conn, dj, table)
-    
+    try:
+        dj = pd.concat([dj.drop(['Scores'], axis=1), dj['Scores'].apply(pd.Series)], axis=1)
+        dj = pd.concat([dj.drop(['Geocode'], axis=1), dj['Geocode'].apply(pd.Series)], axis=1)
+        append(conn, dj, table)
+    except:
+        pass
+ 
 def download_all(conn, links, table):
     for url in tqdm(links):
         save_fsa_data(url, conn, table)
