@@ -12,8 +12,10 @@ def droptable(conn,table):
 @click.command()
 @click.option('--dbname', default='fsa_ratings_all.db',  help='SQLite database name (default: fsa_ratings_all.db)')
 @click.option('--ratingstable', default='ratingstable', help='FSA Ratings table name (default: ratingstable)')
+@click.option('--area', default=None, help='Grab data for area')
+@click.option('--authority', default=None, help='Grab data for Local Authority')
 @click.argument('command')
-def cli(dbname, ratingstable, command):
+def cli(dbname, ratingstable, area, authority, command):
     conn = sqlite3.connect(dbname)
     click.echo('Using SQLite3 database: {}'.format(dbname))
     if command == 'collect':
@@ -21,10 +23,14 @@ def cli(dbname, ratingstable, command):
         #Drop table for now
         droptable(conn,metadata_table)
         print('Scraping table links...')
-        df= fsa.getDataList()
+        if area:
+            print(f'Grabbing data for {area}')
+        elif authority:
+            print(f'Grabbing data for {authority}')
+        df = fsa.getDataList(area=area, authority=authority)
         df.to_sql(metadata_table, conn, index=False, if_exists='replace')
         #Register pandas with tqdm
-        tqdm.pandas(tqdm())
+        tqdm.pandas()
         #Drop table for now
         droptable(conn,ratingstable)
-        df['Link'].progress_apply(fsa.save_fsa_data,conn=conn, table=ratingstable)
+        df['Link'].progress_apply(fsa.save_fsa_data, conn=conn, table=ratingstable)
