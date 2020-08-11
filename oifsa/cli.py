@@ -14,8 +14,9 @@ def droptable(conn,table):
 @click.option('--ratingstable', default='ratingstable', help='FSA Ratings table name (default: ratingstable)')
 @click.option('--area', default=None, help='Grab data for area')
 @click.option('--authority', default=None, help='Grab data for Local Authority')
+@click.option('--drop/--no-drop', default=False, help='Drop ratings table')
 @click.argument('command')
-def cli(dbname, ratingstable, area, authority, command):
+def cli(dbname, ratingstable, area, authority,drop, command):
     conn = sqlite3.connect(dbname)
     click.echo('Using SQLite3 database: {}'.format(dbname))
     if command == 'collect':
@@ -31,6 +32,7 @@ def cli(dbname, ratingstable, area, authority, command):
         df.to_sql(metadata_table, conn, index=False, if_exists='replace')
         #Register pandas with tqdm
         tqdm.pandas()
-        #Drop table for now
-        droptable(conn,ratingstable)
+        if drop:
+            #Drop table for now
+            droptable(conn,ratingstable)
         df['Link'].progress_apply(fsa.save_fsa_data, conn=conn, table=ratingstable)
