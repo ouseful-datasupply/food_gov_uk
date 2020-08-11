@@ -4,15 +4,15 @@ import pandas as pd
 from tqdm import tqdm
 from time import sleep
 
-from bs4 import BeautifulSoup
+from bs4 import BeautifulSoup, NavigableString
 
 import sqlite3
 
-def getDataHTML(url='http://ratings.food.gov.uk/open-data/en-GB'):
+def getDataHTML(url='https://ratings.food.gov.uk/open-data/en-GB'):
     html=requests.get(url)
     return html
 
-def _getDataList(html):
+def _getDataList(html, area='', authority=''):
     def span(cell):
         return cell.find('span').text
     df=pd.DataFrame()
@@ -23,6 +23,14 @@ def _getDataList(html):
     souptables=soup.findAll("table",{'class':'open-data-links'})
     
     for table in souptables:
+
+        prev = table.previous_element
+        while isinstance(prev, NavigableString):
+            prev = prev.previous_element
+        #print(prev.text)
+        if area and prev.text != area:
+            continue
+            
         items=[]
         th=table.find('thead').findAll('th')
         header = [span(th[i]) for i in range(len(th))]
@@ -30,21 +38,31 @@ def _getDataList(html):
             td = tr.find_all("td")
             if not len(td):
                 continue
+            elif authority and authority!=span(td[0]):
+                continue
             a = td[0].find('a')
             if '(English language)' in a.text:
-                items.append( (span(td[0]),span(td[1]), span(td[2]),a['href'] ) )
+                items.append( (span(td[0]), span(td[1]), span(td[2]), a['href'], prev.text ) )
         df=pd.concat([df, pd.DataFrame(items)])
-    df.columns = header + ['Link']
+    # TO DO - check head==df.columns ?
+    if df.empty:
+        return pd.DataFrame(columns=['Local authority', 'Last update', 'Number of businesses', 'Link', 'Area'])
+    else:
+        df.columns = header + ['Link', 'Area']
     return df
 
-def getDataList():
+def getDataList(area='', authority=''):
     #Get the download page HTML
     html = getDataHTML()
     #Extract the links
-    df = _getDataList(html)
+    df = _getDataList(html, area=area, authority=authority)
     return df
-    
-    
+
+
+# +
+#getDataList()
+# -
+
 def checkcols(conn,df,table):
     ''' Add new cols to database table if we want to add rows with additional cols '''
     
@@ -56,7 +74,7 @@ def checkcols(conn,df,table):
         for newcol in newcols:
             q='ALTER TABLE "{}" ADD COLUMN "{}" TEXT;'.format(table,newcol)
             c.execute(q)
-    
+
 def append(conn, df, table):
     ''' Append a new set of data to the database table '''
     
@@ -75,12 +93,12 @@ def save_fsa_data(url, conn, table, delay=1):
     
     #Getting errors in xmltodict parsing some XML files?
     try:
-        dd=xmltodict.parse(r.text)
+        dd = xmltodict.parse(r.text)
     except:
         print('Failed to parse file at {}'.format(url))
         return
     try:
-        dj=pd.DataFrame(dd['FHRSEstablishment']['EstablishmentCollection']['EstablishmentDetail'])
+        dj = pd.DataFrame(dd['FHRSEstablishment']['EstablishmentCollection']['EstablishmentDetail'])
     except:
         print(url)
         print(dj)
@@ -94,15 +112,15 @@ def save_fsa_data(url, conn, table, delay=1):
         append(conn, dj, table)
     except:
         pass
- 
+
 def download_all(conn, links, table):
     for url in tqdm(links):
         save_fsa_data(url, conn, table)
-    
-#dbname='testdball.db'
-#conn = sqlite3.connect(dbname)
-#metadata_table = 'fsa_ratings_metadata'
-#getDataList().to_sql(metadata_table, conn, index=False, if_exists='replace')
 
-#table = 'ratings'
-#download_all(conn, table)
+# dbname='testdball.db'
+# conn = sqlite3.connect(dbname)
+# metadata_table = 'fsa_ratings_metadata'
+# getDataList().to_sql(metadata_table, conn, index=False, if_exists='replace')
+
+# table = 'ratings'
+# download_all(conn, table)
