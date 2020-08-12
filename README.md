@@ -8,7 +8,7 @@ Tools for grabbing data from food.gov.uk
 
 ## Command Line Interface
 
-The CLI will scrape the UK Food Standards Agency ratings data XML files and construct a simple SQLite database from them containing two tables:
+The CLI will scrape the [UK Food Standards Agency ratings data](https://ratings.food.gov.uk/open-data/en-GB) XML files and construct a simple SQLite database from them containing two tables:
 
 - `fsa_ratings_metadata`: containing the name and publication date of each scraped file
 - `USER-DEFINED` (default: `ratingstable`) containing the ratings data from the XML files.
