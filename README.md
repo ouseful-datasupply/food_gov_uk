@@ -1,7 +1,7 @@
 # food\_gov\_uk
 Tools for grabbing data from food.gov.uk
 
-`pip install git+https://github.com/ouseful-datasupply/food_gov_uk.git`
+`pip install --upgrade git+https://github.com/ouseful-datasupply/food_gov_uk.git`
 
 
 [![Binder](https://mybinder.org/badge.svg)](https://mybinder.org/v2/gh/ouseful-datasupply/food_gov_uk/master)
