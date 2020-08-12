@@ -2,7 +2,7 @@ from setuptools import setup
 
 import sys
 if sys.version_info < (3, 6):
-    raise RuntimeError("This package requres Python 3.6+")
+    raise RuntimeError("This package requires Python 3.6+")
 
 #Cribbed from simonw
 def get_long_description():
