@@ -24,5 +24,7 @@ Commands:
 Options:
   --dbname TEXT        SQLite database name (default: fsa_ratings_all.db)
   --ratingstable TEXT  FSA Ratings table name (default: ratingstable)
+  --area TEXT          Specfiy an area to download data for
+  --authority TEXT     Specfiy a local authority to download data for
   --help               Show this message and exit.
 ```
