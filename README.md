@@ -3,6 +3,7 @@ Tools for grabbing data from food.gov.uk
 
 `pip install --upgrade git+https://github.com/ouseful-datasupply/food_gov_uk.git`
 
+PyPi: `pip install ouseful-fsa-datasupply`
 
 [![Binder](https://mybinder.org/badge.svg)](https://mybinder.org/v2/gh/ouseful-datasupply/food_gov_uk/master)
 
@@ -15,8 +16,8 @@ The CLI will scrape the [UK Food Standards Agency ratings data](https://ratings.
 
 The created database can then be used with tools such as [`datasette`](https://github.com/simonw/datasette/tree/master/datasette).
 
-```
-Usage: oi_fsa [OPTIONS] COMMAND
+```text
+Usage: fsa_data [OPTIONS] COMMAND
 
 Commands:
   collect              Collect data from FSA website
@@ -28,3 +29,6 @@ Options:
   --authority TEXT     Specfiy a local authority to download data for
   --help               Show this message and exit.
 ```
+
+
+Example: `fsa_data collect --authority "Isle of Wight" --dbname iwDemo.db`

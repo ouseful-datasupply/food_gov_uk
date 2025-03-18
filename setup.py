@@ -1,6 +1,7 @@
 from setuptools import setup
-
+import os
 import sys
+
 if sys.version_info < (3, 6):
     raise RuntimeError("This package requires Python 3.6+")
 
@@ -13,9 +14,9 @@ def get_long_description():
         return fp.read()
 
 setup(
-    name="oifsa",
-    packages=['oifsa'],
-    version='0.0.1',
+    name="ouseful_fsa_datasupply",
+    packages=['ouseful_fsa_datasupply'],
+    version='0.2.0',
     author="Tony Hirst",
     url="https://github.com/ouseful-datasupply/food_gov_uk",
     description="A simple tool for bulk downloading of etsablishment details and ratings data from food.gov.uk",
@@ -33,7 +34,7 @@ setup(
     ],
     entry_points='''
         [console_scripts]
-        oi_fsa = oifsa.cli:cli
+        fsa_data = ouseful_fsa_datasupply.cli:cli
     ''',
     classifiers=[
         "Programming Language :: Python :: 3.8",

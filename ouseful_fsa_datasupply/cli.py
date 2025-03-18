@@ -1,5 +1,5 @@
 import click
-import oifsa.fsa as fsa
+import ouseful_fsa_datasupply.fsa as fsa
 import sqlite3
 from tqdm import tqdm, tqdm_pandas
 
