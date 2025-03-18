@@ -32,3 +32,5 @@ Options:
 
 
 Example: `fsa_data collect --authority "Isle of Wight" --dbname iwDemo.db`
+
+Example via datasette lite: https://lite.datasette.io/?url=https%3A%2F%2Fraw.githubusercontent.com%2Fouseful-datasupply%2Ffood_gov_uk%2Fmaster%2FiwDemo.db%3Fraw%3Dtrue#
